@@ -1,0 +1,89 @@
+﻿<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1F7A5C">
+  <title>Energie Calc</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <section id="accueil" class="vue">
+    <header class="entete">
+      <p class="petit">Coût annuel estimé</p>
+      <h1>Mes appareils</h1>
+    </header>
+    <div class="total">
+      <div id="total">0,00 €</div>
+      <div id="mensuel" class="petit"></div>
+    </div>
+    <h2 class="titre-liste">Appareils</h2>
+    <ul id="liste" class="liste"></ul>
+    <button class="ajouter" id="btn-ajouter" aria-label="Ajouter un appareil">+</button>
+  </section>
+
+  <section id="ajout" class="vue" hidden>
+    <header class="entete-simple">
+      <button class="retour" data-aller="accueil" aria-label="Retour">&#8249;</button>
+      <h1>Nouvel appareil</h1>
+      <span></span>
+    </header>
+    <form id="formulaire" class="formulaire">
+      <label>Nom de l'appareil
+        <input name="nom" type="text" value="Lave-linge" required>
+      </label>
+      <div class="ligne">
+        <label>Puissance (W)
+          <input name="watts" type="number" min="0" value="2000" required>
+        </label>
+        <label>Heures par jour
+          <input name="heures" type="number" min="0" max="24" step="0.1" value="1" required>
+        </label>
+      </div>
+      <label>Jours d'utilisation par an
+        <input name="jours" type="number" min="0" max="365" value="250" required>
+      </label>
+      <label>Prix du kWh TTC (€)
+        <input name="prix" type="number" min="0" step="0.0001" value="0.2516" required>
+      </label>
+      <label class="case">
+        <input name="hc" type="checkbox" id="case-hc">
+        Heures creuses
+      </label>
+      <div id="champs-hc" hidden>
+        <div class="ligne">
+          <label>Prix HC (€)
+            <input name="prixHc" type="number" min="0" step="0.0001" value="0.1">
+          </label>
+          <label>Part en HC (%)
+            <input name="partHc" type="number" min="0" max="100" value="80">
+          </label>
+        </div>
+      </div>
+      <button type="submit" class="principal">Calculer le coût</button>
+    </form>
+  </section>
+
+  <section id="resultat" class="vue" hidden>
+    <header class="entete-simple">
+      <button class="retour" data-aller="accueil" aria-label="Retour">&#8249;</button>
+      <h1 id="res-nom"></h1>
+      <span></span>
+    </header>
+    <div class="carte-resultat">
+      <p class="petit">Coût annuel estimé</p>
+      <div id="res-annuel" class="gros"></div>
+      <p id="res-mensuel" class="petit"></p>
+    </div>
+    <div class="details" id="res-details"></div>
+    <div class="actions">
+      <button class="principal" data-aller="accueil">Retour à la liste</button>
+      <button class="secondaire" id="btn-supprimer">Supprimer</button>
+    </div>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>
