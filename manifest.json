@@ -1,0 +1,8 @@
+﻿{
+  "name": "Energie Calc",
+  "short_name": "Energie",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#F4F6F8",
+  "theme_color": "#1F7A5C"
+}
