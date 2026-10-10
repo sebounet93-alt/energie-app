@@ -98,3 +98,12 @@ body {
   border-color: #C0392B !important;
   background: #FDEDEC !important;
 }
+
+/* ----- Liste des modèles ----- */
+
+.formulaire select.modele {
+  height: 48px; border: 1px solid #D5DBE3; border-radius: 12px;
+  padding: 0 14px; font-size: 16px; background: #fff; color: #1B1F24;
+}
+
+.formulaire label[hidden] { display: none; }

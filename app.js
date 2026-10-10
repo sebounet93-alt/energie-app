@@ -1,6 +1,23 @@
 ﻿const CLE_STOCKAGE = "energie-appareils";
 const CLE_PRIX = "energie-prix-kwh";
 
+// Valeurs indicatives : l'utilisateur doit vérifier sur la plaque signalétique
+const MODELES = [
+  { nom: "Réfrigérateur", watts: 30, heures: 24, jours: 365 },
+  { nom: "Congélateur", watts: 40, heures: 24, jours: 365 },
+  { nom: "Box internet", watts: 10, heures: 24, jours: 365 },
+  { nom: "Télévision", watts: 100, heures: 3, jours: 365 },
+  { nom: "Ordinateur portable", watts: 50, heures: 4, jours: 250 },
+  { nom: "Ampoule LED", watts: 10, heures: 5, jours: 365 },
+  { nom: "Lave-linge", watts: 2000, heures: 1, jours: 250 },
+  { nom: "Sèche-linge", watts: 2500, heures: 1, jours: 100 },
+  { nom: "Lave-vaisselle", watts: 1800, heures: 1, jours: 200 },
+  { nom: "Four", watts: 2200, heures: 0.5, jours: 100 },
+  { nom: "Plaques de cuisson", watts: 2000, heures: 0.5, jours: 300 },
+  { nom: "Ballon d'eau chaude", watts: 2000, heures: 3, jours: 365 },
+  { nom: "Chauffage électrique", watts: 1500, heures: 8, jours: 180 },
+];
+
 // ----- Calculs -----
 
 function energieAnnuelleKwh(a) {
@@ -154,13 +171,43 @@ function valider(f, hc) {
   return valide;
 }
 
-// ----- Formulaire -----
+// ----- Liste des modèles (ajout uniquement) -----
+
+const modeleWrap = document.createElement("label");
+modeleWrap.textContent = "Modèle type (valeurs indicatives)";
+
+const selectModele = document.createElement("select");
+selectModele.name = "modele";
+selectModele.className = "modele";
+selectModele.innerHTML =
+  `<option value="">Choisir un modèle…</option>` +
+  MODELES.map((m, i) => `<option value="${i}">${m.nom}</option>`).join("");
+modeleWrap.appendChild(selectModele);
+
+document.getElementById("formulaire").prepend(modeleWrap);
+
+selectModele.addEventListener("change", () => {
+  const m = MODELES[selectModele.value];
+  if (!m) return;
+  const f = document.getElementById("formulaire");
+  f.nom.value = m.nom;
+  f.watts.value = m.watts;
+  f.heures.value = m.heures;
+  f.jours.value = m.jours;
+  effacerErreurs();
+});
+
+// ----- Formulaire (ajout et modification) -----
 
 function remplirFormulaire(a) {
   const f = document.getElementById("formulaire");
   f.reset();
+  selectModele.value = "";
   effacerErreurs();
   document.getElementById("titre-ajout").textContent = a ? "Modifier l'appareil" : "Nouvel appareil";
+
+  // La liste des modèles ne sert qu'à l'ajout
+  modeleWrap.hidden = !!a;
 
   if (a) {
     f.nom.value = a.nom;
@@ -182,8 +229,6 @@ function remplirFormulaire(a) {
 }
 
 // ----- Navigation -----
-// Chaque écran a une adresse : #/accueil, #/appareil/ID, #/ajout, #/modifier/ID.
-// Le bouton retour du téléphone et celui de l'appli utilisent donc l'historique du navigateur.
 
 function aller(hash, remplacer = false) {
   if (remplacer) {
@@ -192,11 +237,10 @@ function aller(hash, remplacer = false) {
   } else if (location.hash === hash) {
     route();
   } else {
-    location.hash = hash; // déclenche automatiquement route()
+    location.hash = hash;
   }
 }
 
-// Revient à l'écran précédent ; sur l'accueil, ne fait rien
 function retour() {
   if (location.hash && location.hash !== "#/accueil") {
     history.back();
@@ -275,7 +319,6 @@ document.getElementById("formulaire").addEventListener("submit", (e) => {
   }
 
   sauverAppareils(liste);
-  // Remplace le formulaire dans l'historique : retour ne revient pas sur le formulaire
   aller(`#/appareil/${id}`, true);
 });
 
@@ -294,6 +337,3 @@ window.addEventListener("hashchange", route);
 
 if (!location.hash) history.replaceState(null, "", "#/accueil");
 route();
-
-
-
