@@ -34,8 +34,6 @@ function sauverAppareils(liste) {
   localStorage.setItem(CLE_STOCKAGE, JSON.stringify(liste));
 }
 
-// Prix du kWh de référence : celui enregistré en dernier,
-// ou celui du dernier appareil si rien n'a encore été mémorisé
 function chargerPrixKwh() {
   const memorise = localStorage.getItem(CLE_PRIX);
   if (memorise !== null) return Number(memorise);
@@ -82,7 +80,7 @@ function afficherAccueil() {
       </div>
       <div class="cout">${euro(coutAnnuel(a))}</div>`;
     li.querySelector(".nom").textContent = a.nom;
-    li.addEventListener("click", () => afficherResultat(a.id));
+    li.addEventListener("click", () => aller(`#/appareil/${a.id}`));
     liste.appendChild(li);
   });
 
@@ -91,11 +89,8 @@ function afficherAccueil() {
 
 let idCourant = null;
 
-function afficherResultat(id) {
-  const a = chargerAppareils().find((x) => x.id === id);
-  if (!a) return afficherAccueil();
-
-  idCourant = id;
+function afficherResultat(a) {
+  idCourant = a.id;
   const annuel = coutAnnuel(a);
   const kwh = energieAnnuelleKwh(a);
 
@@ -138,7 +133,6 @@ function afficherErreur(champ, message) {
   champ.closest("label").appendChild(p);
 }
 
-// Retourne true si le formulaire est valide
 function valider(f, hc) {
   effacerErreurs();
   let valide = true;
@@ -160,7 +154,7 @@ function valider(f, hc) {
   return valide;
 }
 
-// ----- Formulaire (ajout et modification) -----
+// ----- Formulaire -----
 
 function remplirFormulaire(a) {
   const f = document.getElementById("formulaire");
@@ -182,25 +176,68 @@ function remplirFormulaire(a) {
       f.partHc.value = Math.round(a.partHc * 100);
     }
   } else {
-    // Nouvel appareil : on pré-remplit avec le prix mémorisé
     f.prix.value = chargerPrixKwh();
     document.getElementById("champs-hc").hidden = true;
   }
 }
 
+// ----- Navigation -----
+// Chaque écran a une adresse : #/accueil, #/appareil/ID, #/ajout, #/modifier/ID.
+// Le bouton retour du téléphone et celui de l'appli utilisent donc l'historique du navigateur.
+
+function aller(hash, remplacer = false) {
+  if (remplacer) {
+    history.replaceState(null, "", hash);
+    route();
+  } else if (location.hash === hash) {
+    route();
+  } else {
+    location.hash = hash; // déclenche automatiquement route()
+  }
+}
+
+// Revient à l'écran précédent ; sur l'accueil, ne fait rien
+function retour() {
+  if (location.hash && location.hash !== "#/accueil") {
+    history.back();
+  } else {
+    aller("#/accueil", true);
+  }
+}
+
+function route() {
+  const [page, id] = location.hash.replace(/^#\/?/, "").split("/");
+  const liste = chargerAppareils();
+
+  if (page === "appareil" && id) {
+    const a = liste.find((x) => x.id === id);
+    if (!a) return aller("#/accueil", true);
+    return afficherResultat(a);
+  }
+
+  if (page === "ajout") {
+    idCourant = null;
+    remplirFormulaire(null);
+    return montrer("ajout");
+  }
+
+  if (page === "modifier" && id) {
+    const a = liste.find((x) => x.id === id);
+    if (!a) return aller("#/accueil", true);
+    idCourant = id;
+    remplirFormulaire(a);
+    return montrer("ajout");
+  }
+
+  afficherAccueil();
+}
+
 // ----- Événements -----
 
-document.getElementById("btn-ajouter").addEventListener("click", () => {
-  idCourant = null;
-  remplirFormulaire(null);
-  montrer("ajout");
-});
+document.getElementById("btn-ajouter").addEventListener("click", () => aller("#/ajout"));
 
 document.getElementById("btn-modifier").addEventListener("click", () => {
-  const a = chargerAppareils().find((x) => x.id === idCourant);
-  if (!a) return afficherAccueil();
-  remplirFormulaire(a);
-  montrer("ajout");
+  aller(`#/modifier/${idCourant}`);
 });
 
 document.getElementById("case-hc").addEventListener("change", (e) => {
@@ -224,7 +261,6 @@ document.getElementById("formulaire").addEventListener("submit", (e) => {
     partHc: hc ? Number(f.partHc.value) / 100 : 0,
   };
 
-  // Le prix saisi devient la nouvelle référence
   sauverPrixKwh(donnees.prix);
 
   const liste = chargerAppareils();
@@ -239,18 +275,24 @@ document.getElementById("formulaire").addEventListener("submit", (e) => {
   }
 
   sauverAppareils(liste);
-  afficherResultat(id);
+  // Remplace le formulaire dans l'historique : retour ne revient pas sur le formulaire
+  aller(`#/appareil/${id}`, true);
 });
 
 document.getElementById("btn-supprimer").addEventListener("click", () => {
   if (!confirm("Supprimer cet appareil ?")) return;
   const liste = chargerAppareils().filter((x) => x.id !== idCourant);
   sauverAppareils(liste);
-  afficherAccueil();
+  retour();
 });
 
 document.querySelectorAll("[data-aller]").forEach((b) =>
-  b.addEventListener("click", () => afficherAccueil())
+  b.addEventListener("click", retour)
 );
 
-afficherAccueil();
+window.addEventListener("hashchange", route);
+
+if (!location.hash) history.replaceState(null, "", "#/accueil");
+route();
+
+
