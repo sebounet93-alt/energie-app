@@ -27,7 +27,7 @@
   <section id="ajout" class="vue" hidden>
     <header class="entete-simple">
       <button class="retour" data-aller="accueil" aria-label="Retour">&#8249;</button>
-      <h1>Nouvel appareil</h1>
+      <h1 id="titre-ajout">Nouvel appareil</h1>
       <span></span>
     </header>
     <form id="formulaire" class="formulaire">
@@ -80,10 +80,12 @@
     <div class="details" id="res-details"></div>
     <div class="actions">
       <button class="principal" data-aller="accueil">Retour à la liste</button>
-      <button class="secondaire" id="btn-supprimer">Supprimer</button>
+      <button class="principal" id="btn-modifier">Modifier</button> <button class="secondaire" id="btn-supprimer">Supprimer</button>
     </div>
   </section>
 
   <script src="app.js"></script>
 </body>
 </html>
+
+

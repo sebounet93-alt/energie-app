@@ -1,6 +1,6 @@
 ﻿const CLE_STOCKAGE = "energie-appareils";
 
-// ----- Calculs (même logique que la version PowerShell) -----
+// ----- Calculs -----
 
 function energieAnnuelleKwh(a) {
   return a.watts * a.heures * a.jours / 1000;
@@ -14,10 +14,20 @@ function coutAnnuel(a) {
   return kwh * prix;
 }
 
-// ----- Stockage sur le téléphone -----
+// ----- Stockage -----
 
 function chargerAppareils() {
-  return JSON.parse(localStorage.getItem(CLE_STOCKAGE) || "[]");
+  const liste = JSON.parse(localStorage.getItem(CLE_STOCKAGE) || "[]");
+  // Attribue un identifiant aux anciens appareils qui n'en ont pas
+  let modifie = false;
+  liste.forEach((a) => {
+    if (!a.id) {
+      a.id = crypto.randomUUID();
+      modifie = true;
+    }
+  });
+  if (modifie) sauverAppareils(liste);
+  return liste;
 }
 
 function sauverAppareils(liste) {
@@ -47,7 +57,7 @@ function afficherAccueil() {
     liste.innerHTML = `<p class="vide">Aucun appareil. Appuie sur + pour commencer.</p>`;
   }
 
-  appareils.forEach((a, i) => {
+  appareils.forEach((a) => {
     const li = document.createElement("li");
     li.innerHTML = `
       <div>
@@ -56,20 +66,20 @@ function afficherAccueil() {
       </div>
       <div class="cout">${euro(coutAnnuel(a))}</div>`;
     li.querySelector(".nom").textContent = a.nom;
-    li.addEventListener("click", () => afficherResultat(i));
+    li.addEventListener("click", () => afficherResultat(a.id));
     liste.appendChild(li);
   });
 
   montrer("accueil");
 }
 
-let indexCourant = null;
+let idCourant = null;
 
-function afficherResultat(index) {
-  const a = chargerAppareils()[index];
+function afficherResultat(id) {
+  const a = chargerAppareils().find((x) => x.id === id);
   if (!a) return afficherAccueil();
 
-  indexCourant = index;
+  idCourant = id;
   const annuel = coutAnnuel(a);
   const kwh = energieAnnuelleKwh(a);
 
@@ -87,11 +97,43 @@ function afficherResultat(index) {
   montrer("resultat");
 }
 
+// ----- Formulaire (ajout et modification) -----
+
+function remplirFormulaire(a) {
+  const f = document.getElementById("formulaire");
+  f.reset();
+  document.getElementById("titre-ajout").textContent = a ? "Modifier l'appareil" : "Nouvel appareil";
+
+  if (a) {
+    f.nom.value = a.nom;
+    f.watts.value = a.watts;
+    f.heures.value = a.heures;
+    f.jours.value = a.jours;
+    f.prix.value = a.prix;
+    const hc = a.prixHc != null;
+    document.getElementById("case-hc").checked = hc;
+    document.getElementById("champs-hc").hidden = !hc;
+    if (hc) {
+      f.prixHc.value = a.prixHc;
+      f.partHc.value = Math.round(a.partHc * 100);
+    }
+  } else {
+    document.getElementById("champs-hc").hidden = true;
+  }
+}
+
 // ----- Événements -----
 
 document.getElementById("btn-ajouter").addEventListener("click", () => {
-  document.getElementById("formulaire").reset();
-  document.getElementById("champs-hc").hidden = true;
+  idCourant = null;
+  remplirFormulaire(null);
+  montrer("ajout");
+});
+
+document.getElementById("btn-modifier").addEventListener("click", () => {
+  const a = chargerAppareils().find((x) => x.id === idCourant);
+  if (!a) return afficherAccueil();
+  remplirFormulaire(a);
   montrer("ajout");
 });
 
@@ -104,7 +146,7 @@ document.getElementById("formulaire").addEventListener("submit", (e) => {
   const f = new FormData(e.target);
   const hc = document.getElementById("case-hc").checked;
 
-  const appareil = {
+  const donnees = {
     nom: f.get("nom"),
     watts: Number(f.get("watts")),
     heures: Number(f.get("heures")),
@@ -115,15 +157,25 @@ document.getElementById("formulaire").addEventListener("submit", (e) => {
   };
 
   const liste = chargerAppareils();
-  liste.push(appareil);
+  let id = idCourant;
+
+  if (id) {
+    // Modification : on remplace l'appareil ayant cet identifiant
+    const i = liste.findIndex((x) => x.id === id);
+    liste[i] = { id, ...donnees };
+  } else {
+    // Ajout : nouvel identifiant
+    id = crypto.randomUUID();
+    liste.push({ id, ...donnees });
+  }
+
   sauverAppareils(liste);
-  afficherResultat(liste.length - 1);
+  afficherResultat(id);
 });
 
 document.getElementById("btn-supprimer").addEventListener("click", () => {
   if (!confirm("Supprimer cet appareil ?")) return;
-  const liste = chargerAppareils();
-  liste.splice(indexCourant, 1);
+  const liste = chargerAppareils().filter((x) => x.id !== idCourant);
   sauverAppareils(liste);
   afficherAccueil();
 });
