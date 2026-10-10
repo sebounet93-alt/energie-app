@@ -58,7 +58,7 @@ function montrer(id) {
 }
 
 function afficherAccueil() {
-  const appareils = chargerAppareils();
+  const appareils = chargerAppareils().sort((a, b) => coutAnnuel(b) - coutAnnuel(a));
   const total = appareils.reduce((s, a) => s + coutAnnuel(a), 0);
 
   document.getElementById("total").textContent = euro(total);
@@ -294,5 +294,6 @@ window.addEventListener("hashchange", route);
 
 if (!location.hash) history.replaceState(null, "", "#/accueil");
 route();
+
 
 
