@@ -97,6 +97,12 @@ function afficherAccueil() {
       </div>
       <div class="cout">${euro(coutAnnuel(a))}</div>`;
     li.querySelector(".nom").textContent = a.nom;
+    const part = total > 0 ? (coutAnnuel(a) / total) * 100 : 0;
+    const barre = document.createElement("div");
+    barre.className = "barre";
+    barre.innerHTML = '<div class="barre-fill"></div>';
+    barre.firstChild.style.width = part.toFixed(1) + "%";
+    li.appendChild(barre);
     li.addEventListener("click", () => aller(`#/appareil/${a.id}`));
     liste.appendChild(li);
   });
@@ -337,3 +343,4 @@ window.addEventListener("hashchange", route);
 
 if (!location.hash) history.replaceState(null, "", "#/accueil");
 route();
+
