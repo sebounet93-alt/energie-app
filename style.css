@@ -84,3 +84,17 @@ body {
 .details span:last-child { font-weight: 600; }
 
 .actions { position: fixed; left: 20px; right: 20px; bottom: 32px; max-width: 440px; margin: 0 auto; }
+
+/* ----- Messages d'erreur ----- */
+
+.erreur {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #C0392B;
+  font-weight: 500;
+}
+
+.champ-invalide {
+  border-color: #C0392B !important;
+  background: #FDEDEC !important;
+}

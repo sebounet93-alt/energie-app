@@ -18,7 +18,6 @@ function coutAnnuel(a) {
 
 function chargerAppareils() {
   const liste = JSON.parse(localStorage.getItem(CLE_STOCKAGE) || "[]");
-  // Attribue un identifiant aux anciens appareils qui n'en ont pas
   let modifie = false;
   liste.forEach((a) => {
     if (!a.id) {
@@ -97,11 +96,59 @@ function afficherResultat(id) {
   montrer("resultat");
 }
 
+// ----- Validation -----
+
+const REGLES = {
+  nom:     { verifier: (v) => v.trim().length > 0, message: "Donne un nom à l'appareil." },
+  watts:   { verifier: (v) => v > 0 && v <= 20000, message: "Entre une puissance entre 1 et 20 000 W." },
+  heures:  { verifier: (v) => v >= 0 && v <= 24, message: "Entre un nombre d'heures entre 0 et 24." },
+  jours:   { verifier: (v) => v >= 0 && v <= 365, message: "Entre un nombre de jours entre 0 et 365." },
+  prix:    { verifier: (v) => v > 0 && v <= 2, message: "Entre un prix du kWh entre 0 et 2 €." },
+  prixHc:  { verifier: (v) => v > 0 && v <= 2, message: "Entre un prix HC entre 0 et 2 €." },
+  partHc:  { verifier: (v) => v >= 0 && v <= 100, message: "La part en heures creuses doit être entre 0 et 100 %." },
+};
+
+function effacerErreurs() {
+  document.querySelectorAll(".erreur").forEach((e) => e.remove());
+  document.querySelectorAll(".champ-invalide").forEach((c) => c.classList.remove("champ-invalide"));
+}
+
+function afficherErreur(champ, message) {
+  champ.classList.add("champ-invalide");
+  const p = document.createElement("p");
+  p.className = "erreur";
+  p.textContent = message;
+  champ.closest("label").appendChild(p);
+}
+
+// Retourne true si le formulaire est valide
+function valider(f, hc) {
+  effacerErreurs();
+  let valide = true;
+
+  const champsAVerifier = ["nom", "watts", "heures", "jours", "prix"];
+  if (hc) champsAVerifier.push("prixHc", "partHc");
+
+  champsAVerifier.forEach((nom) => {
+    const champ = f.elements[nom];
+    const brut = champ.value;
+    const valeur = nom === "nom" ? brut : Number(brut);
+    const ok = brut !== "" && REGLES[nom].verifier(valeur);
+    if (!ok) {
+      afficherErreur(champ, REGLES[nom].message);
+      valide = false;
+    }
+  });
+
+  return valide;
+}
+
 // ----- Formulaire (ajout et modification) -----
 
 function remplirFormulaire(a) {
   const f = document.getElementById("formulaire");
   f.reset();
+  effacerErreurs();
   document.getElementById("titre-ajout").textContent = a ? "Modifier l'appareil" : "Nouvel appareil";
 
   if (a) {
@@ -143,28 +190,28 @@ document.getElementById("case-hc").addEventListener("change", (e) => {
 
 document.getElementById("formulaire").addEventListener("submit", (e) => {
   e.preventDefault();
-  const f = new FormData(e.target);
+  const f = e.target;
   const hc = document.getElementById("case-hc").checked;
 
+  if (!valider(f, hc)) return;
+
   const donnees = {
-    nom: f.get("nom"),
-    watts: Number(f.get("watts")),
-    heures: Number(f.get("heures")),
-    jours: Number(f.get("jours")),
-    prix: Number(f.get("prix")),
-    prixHc: hc ? Number(f.get("prixHc")) : null,
-    partHc: hc ? Number(f.get("partHc")) / 100 : 0,
+    nom: f.nom.value.trim(),
+    watts: Number(f.watts.value),
+    heures: Number(f.heures.value),
+    jours: Number(f.jours.value),
+    prix: Number(f.prix.value),
+    prixHc: hc ? Number(f.prixHc.value) : null,
+    partHc: hc ? Number(f.partHc.value) / 100 : 0,
   };
 
   const liste = chargerAppareils();
   let id = idCourant;
 
   if (id) {
-    // Modification : on remplace l'appareil ayant cet identifiant
     const i = liste.findIndex((x) => x.id === id);
     liste[i] = { id, ...donnees };
   } else {
-    // Ajout : nouvel identifiant
     id = crypto.randomUUID();
     liste.push({ id, ...donnees });
   }
