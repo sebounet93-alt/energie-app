@@ -1,4 +1,5 @@
 ﻿const CLE_STOCKAGE = "energie-appareils";
+const CLE_PRIX = "energie-prix-kwh";
 
 // ----- Calculs -----
 
@@ -31,6 +32,22 @@ function chargerAppareils() {
 
 function sauverAppareils(liste) {
   localStorage.setItem(CLE_STOCKAGE, JSON.stringify(liste));
+}
+
+// Prix du kWh de référence : celui enregistré en dernier,
+// ou celui du dernier appareil si rien n'a encore été mémorisé
+function chargerPrixKwh() {
+  const memorise = localStorage.getItem(CLE_PRIX);
+  if (memorise !== null) return Number(memorise);
+
+  const liste = chargerAppareils();
+  if (liste.length > 0) return liste[liste.length - 1].prix;
+
+  return 0.2516;
+}
+
+function sauverPrixKwh(prix) {
+  localStorage.setItem(CLE_PRIX, String(prix));
 }
 
 // ----- Affichage -----
@@ -165,6 +182,8 @@ function remplirFormulaire(a) {
       f.partHc.value = Math.round(a.partHc * 100);
     }
   } else {
+    // Nouvel appareil : on pré-remplit avec le prix mémorisé
+    f.prix.value = chargerPrixKwh();
     document.getElementById("champs-hc").hidden = true;
   }
 }
@@ -204,6 +223,9 @@ document.getElementById("formulaire").addEventListener("submit", (e) => {
     prixHc: hc ? Number(f.prixHc.value) : null,
     partHc: hc ? Number(f.partHc.value) / 100 : 0,
   };
+
+  // Le prix saisi devient la nouvelle référence
+  sauverPrixKwh(donnees.prix);
 
   const liste = chargerAppareils();
   let id = idCourant;
