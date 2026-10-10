@@ -22,6 +22,12 @@
     </div>
     <h2 class="titre-liste">Appareils</h2>
     <ul id="liste" class="liste"></ul>
+        <div class="sauvegarde">
+      <button class="sauv-btn" id="btn-exporter">Exporter mes données</button>
+      <label class="sauv-btn">Importer une sauvegarde
+        <input type="file" id="fichier-import" accept=".json,application/json" hidden>
+      </label>
+    </div>
     <button class="ajouter" id="btn-ajouter" aria-label="Ajouter un appareil">+</button>
   </section>
 
@@ -86,8 +92,10 @@
   </section>
 
   <script src="app.js"></script>
+  <script src="sauvegarde.js"></script>
 </body>
 </html>
+
 
 
 
