@@ -185,3 +185,15 @@ body {
 /* ----- Note sur les modèles ----- */
 
 .aide-modele { margin: -4px 0 0; font-size: 13px; color: #5A6370; line-height: 1.4; }
+
+/* ----- Mascotte renard, taille finale ----- */
+
+.titre-ligne { display: flex; align-items: center; justify-content: space-between; }
+
+.titre-ligne .mascotte {
+  width: 56px !important;
+  height: 56px !important;
+  max-width: 56px;
+  flex-shrink: 0;
+  animation: respire 4s ease-in-out infinite;
+}

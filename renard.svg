@@ -1,23 +1,16 @@
-﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
   <!-- oreilles -->
-  <path d="M24 14 L48 44 L26 58 Z" fill="#E8833A"/>
-  <path d="M96 14 L72 44 L94 58 Z" fill="#E8833A"/>
-  <path d="M30 22 L44 44 L30 52 Z" fill="#2B1D16"/>
-  <path d="M90 22 L76 44 L90 52 Z" fill="#2B1D16"/>
+  <path d="M20 40 L32 8 L46 36 Z" fill="#E8833A"/>
+  <path d="M80 40 L68 8 L54 36 Z" fill="#E8833A"/>
+  <path d="M27 34 L32 18 L40 34 Z" fill="#3A2418"/>
+  <path d="M73 34 L68 18 L60 34 Z" fill="#3A2418"/>
   <!-- tête -->
-  <path d="M60 36 C88 36 104 52 104 70 C104 92 84 104 60 106 C36 104 16 92 16 70 C16 52 32 36 60 36 Z" fill="#E8833A"/>
-  <!-- museau blanc -->
-  <path d="M60 62 C78 62 90 72 90 84 C90 98 76 106 60 106 C44 106 30 98 30 84 C30 72 42 62 60 62 Z" fill="#FFF6EC"/>
+  <path d="M50 92 C40 84 22 74 18 56 C16 44 30 34 50 34 C70 34 84 44 82 56 C78 74 60 84 50 92 Z" fill="#E8833A"/>
+  <!-- museau et joues claires -->
+  <path d="M50 92 C42 84 30 76 28 66 C36 70 44 72 50 72 C56 72 64 70 72 66 C70 76 58 84 50 92 Z" fill="#FFF6EC"/>
   <!-- yeux -->
-  <circle cx="44" cy="70" r="4.5" fill="#2B1D16"/>
-  <circle cx="76" cy="70" r="4.5" fill="#2B1D16"/>
-  <circle cx="45.5" cy="68.5" r="1.4" fill="#FFFFFF"/>
-  <circle cx="77.5" cy="68.5" r="1.4" fill="#FFFFFF"/>
+  <path d="M31 56 Q38 51 45 56 Q38 61 31 56 Z" fill="#3A2418"/>
+  <path d="M55 56 Q62 51 69 56 Q62 61 55 56 Z" fill="#3A2418"/>
   <!-- truffe -->
-  <ellipse cx="60" cy="90" rx="5" ry="3.8" fill="#2B1D16"/>
-  <!-- sourire -->
-  <path d="M52 98 Q60 104 68 98" stroke="#2B1D16" stroke-width="2.4" fill="none" stroke-linecap="round"/>
-  <!-- joues -->
-  <circle cx="36" cy="84" r="3.5" fill="#F4A7A0" opacity="0.6"/>
-  <circle cx="84" cy="84" r="3.5" fill="#F4A7A0" opacity="0.6"/>
+  <ellipse cx="50" cy="87" rx="4" ry="3" fill="#3A2418"/>
 </svg>
