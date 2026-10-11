@@ -30,7 +30,7 @@
       </label>
       <div class="sim-resultat">
         <div><span>Coût annuel simulé</span><strong id="sim-cout"></strong></div>
-        <div><span id="sim-libelle"></span><strong id="sim-eco"></strong></div>
+        <div><span>Variation par an</span><strong id="sim-variation"></strong></div>
       </div>`;
 
     section.querySelector(".carte-resultat").after(bloc);
@@ -41,21 +41,24 @@
     const mettreAJour = () => {
       const h = Number(range.value);
       const simule = coutAnnuel({ ...a, heures: h });
-      const difference = actuel - simule;
-      const eco = bloc.querySelector("#sim-eco");
-      const libelle = bloc.querySelector("#sim-libelle");
+      // Positif = hausse de la facture, négatif = baisse
+      const variation = simule - actuel;
+      const elVariation = bloc.querySelector("#sim-variation");
 
       bloc.querySelector("#sim-h").textContent = h;
       bloc.querySelector("#sim-cout").textContent = euro(simule);
 
-      if (difference >= 0) {
-        libelle.textContent = "Économie par an";
-        eco.textContent = euro(difference);
-        eco.className = "";
+      if (Math.abs(variation) < 0.005) {
+        elVariation.textContent = euro(0);
+        elVariation.className = "";
+      } else if (variation < 0) {
+        // Baisse de la facture : signe moins, en vert
+        elVariation.textContent = "−" + euro(-variation);
+        elVariation.className = "";
       } else {
-        libelle.textContent = "Surcoût par an";
-        eco.textContent = "+" + euro(-difference);
-        eco.className = "surcout";
+        // Hausse de la facture : signe plus, en rouge
+        elVariation.textContent = "+" + euro(variation);
+        elVariation.className = "surcout";
       }
     };
 
