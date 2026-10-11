@@ -30,7 +30,7 @@
       </label>
       <div class="sim-resultat">
         <div><span>Coût annuel simulé</span><strong id="sim-cout"></strong></div>
-        <div><span>Économie par an</span><strong id="sim-eco"></strong></div>
+        <div><span id="sim-libelle"></span><strong id="sim-eco"></strong></div>
       </div>`;
 
     section.querySelector(".carte-resultat").after(bloc);
@@ -41,13 +41,22 @@
     const mettreAJour = () => {
       const h = Number(range.value);
       const simule = coutAnnuel({ ...a, heures: h });
-      const economie = actuel - simule;
+      const difference = actuel - simule;
+      const eco = bloc.querySelector("#sim-eco");
+      const libelle = bloc.querySelector("#sim-libelle");
 
       bloc.querySelector("#sim-h").textContent = h;
       bloc.querySelector("#sim-cout").textContent = euro(simule);
-      bloc.querySelector("#sim-eco").textContent = economie >= 0
-        ? euro(economie)
-        : "surcoût de " + euro(-economie);
+
+      if (difference >= 0) {
+        libelle.textContent = "Économie par an";
+        eco.textContent = euro(difference);
+        eco.className = "";
+      } else {
+        libelle.textContent = "Surcoût par an";
+        eco.textContent = "+" + euro(-difference);
+        eco.className = "surcout";
+      }
     };
 
     range.addEventListener("input", mettreAJour);

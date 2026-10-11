@@ -167,3 +167,5 @@ body {
 .sim-resultat div:last-child { border-bottom: none; }
 .sim-resultat span { color: #5A6370; }
 .sim-resultat strong { color: #1F7A5C; }
+
+.sim-resultat strong.surcout { color: #C0392B; }
