@@ -192,6 +192,11 @@ modeleWrap.appendChild(selectModele);
 
 document.getElementById("formulaire").prepend(modeleWrap);
 
+const noteModele = document.createElement("p");
+noteModele.className = "aide-modele";
+noteModele.textContent = "Ces puissances sont indicatives. Vérifie-les sur la plaque signalétique de ton appareil, ou sur sa fiche technique.";
+modeleWrap.after(noteModele);
+
 selectModele.addEventListener("change", () => {
   const m = MODELES[selectModele.value];
   if (!m) return;
@@ -343,4 +348,5 @@ window.addEventListener("hashchange", route);
 
 if (!location.hash) history.replaceState(null, "", "#/accueil");
 route();
+
 

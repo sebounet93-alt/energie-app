@@ -181,3 +181,7 @@ body {
   margin-top: 10px; height: 40px; padding: 0 16px; border: none; border-radius: 12px;
   background: #D97757; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer;
 }
+
+/* ----- Note sur les modèles ----- */
+
+.aide-modele { margin: -4px 0 0; font-size: 13px; color: #5A6370; line-height: 1.4; }
