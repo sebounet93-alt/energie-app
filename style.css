@@ -1,199 +1,271 @@
-﻿* { box-sizing: border-box; }
+﻿/* ===== Energie Calc : thème v2 ===== */
+
+:root {
+  --vert: #1F7A5C;
+  --vert-clair: #2E9C78;
+  --vert-pale: #E7F3EE;
+  --orange: #E8833A;
+  --orange-fonce: #D9702A;
+  --rouge: #C0392B;
+  --fond: #F5F3EF;
+  --carte: #FFFFFF;
+  --texte: #1E2A26;
+  --texte-doux: #6B7770;
+  --bordure: #E6E1D8;
+  --ombre: 0 2px 10px rgba(30, 42, 38, 0.06);
+  --ombre-forte: 0 14px 30px rgba(31, 122, 92, 0.28);
+}
+
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
-  font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background: #F4F6F8;
-  color: #1B1F24;
+  font-family: "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+  background: var(--fond);
+  color: var(--texte);
   min-height: 100vh;
   padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+  -webkit-font-smoothing: antialiased;
 }
 
-.vue { padding: 24px 20px 120px; max-width: 480px; margin: 0 auto; }
+.vue { max-width: 480px; margin: 0 auto; padding: 24px 20px 150px; }
 .vue[hidden] { display: none; }
 
-.entete { padding-top: 24px; }
-.entete h1 { margin: 4px 0 0; font-size: 28px; }
-.entete-simple { display: flex; justify-content: space-between; align-items: center; padding-top: 12px; }
-.entete-simple h1 { margin: 0; font-size: 18px; }
+/* ----- En-têtes ----- */
 
-.petit { font-size: 14px; color: #5A6370; margin: 0; }
-.gros { font-size: 44px; font-weight: 700; margin: 6px 0; }
+.entete { padding-top: 12px; }
+.entete h1 { margin: 2px 0 0; font-size: 30px; font-weight: 800; letter-spacing: -0.5px; }
 
-.total {
-  margin-top: 16px; padding: 20px; border-radius: 20px;
-  background: #1F7A5C; color: #fff;
-}
-.total .petit { color: #d9efe6; }
-#total { font-size: 40px; font-weight: 700; margin-top: 4px; }
-#mensuel { color: #d9efe6; margin-top: 6px; }
+.entete-simple { display: flex; justify-content: space-between; align-items: center; padding-top: 8px; }
+.entete-simple h1 { margin: 0; font-size: 18px; font-weight: 700; }
 
-.titre-liste { font-size: 14px; color: #5A6370; margin: 24px 0 8px; }
-.liste { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
-.liste li {
-  background: #fff; border-radius: 16px; padding: 16px;
-  display: flex; justify-content: space-between; align-items: center;
-  min-height: 44px; cursor: pointer;
-}
-.liste .nom { font-size: 17px; font-weight: 600; }
-.liste .info { font-size: 14px; color: #5A6370; margin-top: 2px; }
-.liste .cout { font-size: 17px; font-weight: 700; color: #1F7A5C; }
-.vide { color: #5A6370; text-align: center; padding: 24px 0; }
+.petit { font-size: 14px; color: var(--texte-doux); margin: 0; }
+.gros { font-size: 52px; font-weight: 800; letter-spacing: -1px; margin: 8px 0 4px; }
 
-.ajouter {
-  position: fixed; right: 24px; bottom: 32px;
-  width: 60px; height: 60px; border-radius: 30px; border: none;
-  background: #D97757; color: #fff; font-size: 32px; cursor: pointer;
-  box-shadow: 0 6px 16px rgba(0,0,0,.18);
+.titre-ligne { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.titre-ligne .mascotte {
+  width: 56px; height: 56px; flex-shrink: 0;
+  animation: respire 4s ease-in-out infinite;
 }
 
-.retour {
-  background: none; border: none; color: #1F7A5C; font-size: 28px;
-  min-width: 44px; min-height: 44px; cursor: pointer;
+@keyframes respire {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
 }
 
-.formulaire { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
-.formulaire label { display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600; color: #5A6370; }
-.formulaire input[type="text"], .formulaire input[type="number"] {
-  height: 48px; border: 1px solid #D5DBE3; border-radius: 12px;
-  padding: 0 14px; font-size: 16px; background: #fff; color: #1B1F24;
-}
-.ligne { display: flex; gap: 12px; }
-.ligne label { flex: 1; }
-.case { flex-direction: row !important; align-items: center; gap: 10px !important; font-size: 16px !important; color: #1B1F24 !important; background: #fff; border-radius: 16px; padding: 16px; min-height: 44px; }
-.case input { width: 22px; height: 22px; accent-color: #1F7A5C; }
+/* ----- Carte de total (accueil) et carte de résultat ----- */
 
-.principal, .secondaire {
-  width: 100%; height: 56px; border-radius: 16px; font-size: 17px; font-weight: 600; cursor: pointer;
+.total, .carte-resultat {
+  position: relative; overflow: hidden;
+  margin-top: 18px; padding: 26px 24px; border-radius: 26px;
+  background: linear-gradient(135deg, var(--vert-clair), var(--vert) 65%);
+  color: #fff; box-shadow: var(--ombre-forte);
 }
-.principal { border: none; background: #1F7A5C; color: #fff; margin-top: 8px; }
-.secondaire { border: 1px solid #C0392B; background: transparent; color: #C0392B; margin-top: 12px; }
 
-.carte-resultat {
-  margin-top: 16px; padding: 24px; border-radius: 20px;
-  background: #1F7A5C; color: #fff; text-align: center;
+.total::after, .carte-resultat::after {
+  content: ""; position: absolute; right: -50px; top: -50px;
+  width: 170px; height: 170px; border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  pointer-events: none;
 }
-.carte-resultat .petit { color: #d9efe6; }
+
+.total .petit, .carte-resultat .petit { color: rgba(255, 255, 255, 0.8); }
+.carte-resultat { text-align: center; }
 .carte-resultat .gros { color: #fff; }
-#res-mensuel { color: #d9efe6; }
 
-.details { margin-top: 16px; background: #fff; border-radius: 16px; padding: 4px 16px; }
-.details div { display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid #E3E7EC; }
-.details div:last-child { border-bottom: none; }
-.details span:first-child { color: #5A6370; }
-.details span:last-child { font-weight: 600; }
+#total { font-size: 40px; font-weight: 800; letter-spacing: -0.5px; margin-top: 6px; }
+#mensuel { color: rgba(255, 255, 255, 0.85); margin-top: 6px; }
+#res-mensuel { color: rgba(255, 255, 255, 0.85); }
 
-.actions { position: fixed; left: 20px; right: 20px; bottom: 32px; max-width: 440px; margin: 0 auto; }
+/* ----- Liste des appareils ----- */
 
-/* ----- Messages d'erreur ----- */
-
-.erreur {
-  margin: 4px 0 0;
-  font-size: 13px;
-  color: #C0392B;
-  font-weight: 500;
+.titre-liste {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--texte-doux); margin: 28px 0 10px;
 }
 
-.champ-invalide {
-  border-color: #C0392B !important;
-  background: #FDEDEC !important;
+.liste { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
+
+.liste li {
+  display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+  background: var(--carte); border-radius: 20px; padding: 18px 18px 16px;
+  box-shadow: var(--ombre); cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
 }
+.liste li:active { transform: scale(0.98); }
 
-/* ----- Liste des modèles ----- */
+.liste .nom { font-size: 17px; font-weight: 700; }
+.liste .info { font-size: 14px; color: var(--texte-doux); margin-top: 3px; }
+.liste .cout { font-size: 17px; font-weight: 800; color: var(--vert); }
 
-.formulaire select.modele {
-  height: 48px; border: 1px solid #D5DBE3; border-radius: 12px;
-  padding: 0 14px; font-size: 16px; background: #fff; color: #1B1F24;
+.vide {
+  text-align: center; color: var(--texte-doux);
+  padding: 32px 16px; border: 2px dashed var(--bordure); border-radius: 20px;
 }
-
-.formulaire label[hidden] { display: none; }
-
-/* ----- Barre de répartition ----- */
-
-.liste li { flex-wrap: wrap; }
 
 .barre {
-  width: 100%; height: 6px; margin-top: 10px;
-  background: #E3E7EC; border-radius: 3px; overflow: hidden;
+  width: 100%; height: 8px; margin-top: 14px;
+  background: #EEF0EC; border-radius: 99px; overflow: hidden;
+}
+.barre-fill {
+  height: 100%; border-radius: 99px;
+  background: linear-gradient(90deg, var(--vert-clair), var(--vert));
 }
 
-.barre-fill {
-  height: 100%; background: #1F7A5C; border-radius: 3px;
+/* ----- Bouton d'ajout ----- */
+
+.ajouter {
+  position: fixed; right: 22px; bottom: 30px; z-index: 10;
+  width: 64px; height: 64px; border-radius: 22px; border: none;
+  background: linear-gradient(135deg, #F09A56, var(--orange-fonce));
+  color: #fff; font-size: 34px; font-weight: 300; line-height: 1;
+  box-shadow: 0 12px 26px rgba(232, 131, 58, 0.45);
+  cursor: pointer; transition: transform 0.15s;
 }
+.ajouter:active { transform: scale(0.94); }
 
 /* ----- Sauvegarde ----- */
 
-.sauvegarde { margin-top: 32px; display: flex; flex-direction: column; gap: 12px; }
+.sauvegarde { margin-top: 32px; display: flex; flex-direction: column; gap: 10px; }
 
 .sauv-btn {
-  display: block; width: 100%; height: 48px; line-height: 48px;
-  text-align: center; border: 1px solid #1F7A5C; border-radius: 16px;
-  background: transparent; color: #1F7A5C; font-size: 16px; font-weight: 600;
-  cursor: pointer; box-sizing: border-box;
+  display: block; width: 100%; height: 50px; line-height: 50px; text-align: center;
+  border: 1.5px solid var(--vert); border-radius: 16px; background: var(--carte);
+  color: var(--vert); font-size: 15px; font-weight: 700; cursor: pointer;
+  box-sizing: border-box;
 }
 
-/* ----- Simulation ----- */
-
-.simulation { margin-top: 16px; background: #fff; border-radius: 16px; padding: 16px; }
-.simulation h2 { margin: 0 0 4px; font-size: 17px; }
-.sim-label { display: block; margin-top: 12px; font-size: 14px; color: #5A6370; }
-.sim-label input { display: block; width: 100%; margin-top: 8px; accent-color: #1F7A5C; }
-.sim-resultat { margin-top: 12px; }
-.sim-resultat div { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #E3E7EC; }
-.sim-resultat div:last-child { border-bottom: none; }
-.sim-resultat span { color: #5A6370; }
-.sim-resultat strong { color: #1F7A5C; }
-
-/* ----- Simulation ----- */
-
-.simulation { margin-top: 16px; background: #fff; border-radius: 16px; padding: 16px; }
-.simulation h2 { margin: 0 0 4px; font-size: 17px; }
-.sim-label { display: block; margin-top: 12px; font-size: 14px; color: #5A6370; }
-.sim-label input { display: block; width: 100%; margin-top: 8px; accent-color: #1F7A5C; }
-.sim-resultat { margin-top: 12px; }
-.sim-resultat div { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #E3E7EC; }
-.sim-resultat div:last-child { border-bottom: none; }
-.sim-resultat span { color: #5A6370; }
-.sim-resultat strong { color: #1F7A5C; }
-
-/* ----- Simulation ----- */
-
-.simulation { margin-top: 16px; background: #fff; border-radius: 16px; padding: 16px; }
-.simulation h2 { margin: 0 0 4px; font-size: 17px; }
-.sim-label { display: block; margin-top: 12px; font-size: 14px; color: #5A6370; }
-.sim-label input { display: block; width: 100%; margin-top: 8px; accent-color: #1F7A5C; }
-.sim-resultat { margin-top: 12px; }
-.sim-resultat div { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #E3E7EC; }
-.sim-resultat div:last-child { border-bottom: none; }
-.sim-resultat span { color: #5A6370; }
-.sim-resultat strong { color: #1F7A5C; }
-
-.sim-resultat strong.surcout { color: #C0392B; }
-
-/* ----- Rappel de sauvegarde ----- */
-
 .rappel {
-  margin-top: 16px; padding: 14px 16px; border-radius: 16px;
-  background: #FDF3E7; color: #7A4A12; font-size: 14px; line-height: 1.4;
+  margin-top: 18px; padding: 14px 16px; border-radius: 18px;
+  background: #FFF4E8; border: 1px solid #F8DFC3;
+  color: #8A4B14; font-size: 14px; line-height: 1.45;
 }
 .rappel p { margin: 0; }
 .rappel button {
   margin-top: 10px; height: 40px; padding: 0 16px; border: none; border-radius: 12px;
-  background: #D97757; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer;
+  background: var(--orange); color: #fff; font-size: 14px; font-weight: 700; cursor: pointer;
 }
 
-/* ----- Note sur les modèles ----- */
+/* ----- Boutons de navigation ----- */
 
-.aide-modele { margin: -4px 0 0; font-size: 13px; color: #5A6370; line-height: 1.4; }
+.retour {
+  width: 44px; height: 44px; border-radius: 50%; border: none;
+  background: var(--carte); color: var(--vert); font-size: 26px; line-height: 40px;
+  box-shadow: var(--ombre); cursor: pointer;
+}
 
-/* ----- Mascotte renard, taille finale ----- */
+/* ----- Détails d'un appareil ----- */
 
-.titre-ligne { display: flex; align-items: center; justify-content: space-between; }
+.details {
+  margin-top: 18px; background: var(--carte); border-radius: 22px;
+  padding: 6px 18px; box-shadow: var(--ombre);
+}
+.details div {
+  display: flex; justify-content: space-between; gap: 12px;
+  padding: 14px 0; border-bottom: 1px solid #F0ECE5; font-size: 15px;
+}
+.details div:last-child { border-bottom: none; }
+.details span:first-child { color: var(--texte-doux); }
+.details span:last-child { font-weight: 700; text-align: right; }
 
-.titre-ligne .mascotte {
-  width: 56px !important;
-  height: 56px !important;
-  max-width: 56px;
-  flex-shrink: 0;
-  animation: respire 4s ease-in-out infinite;
+.actions {
+  position: fixed; left: 20px; right: 20px; bottom: 28px;
+  max-width: 440px; margin: 0 auto;
+  display: flex; flex-direction: column; gap: 10px;
+}
+
+/* ----- Formulaire ----- */
+
+.formulaire { display: flex; flex-direction: column; gap: 16px; margin-top: 18px; }
+
+.formulaire label {
+  display: flex; flex-direction: column; gap: 8px;
+  font-size: 13px; font-weight: 700; color: var(--texte-doux);
+}
+.formulaire label[hidden] { display: none; }
+
+.formulaire input:not([type="checkbox"]),
+.formulaire select.modele {
+  height: 52px; padding: 0 16px;
+  border: 1.5px solid var(--bordure); border-radius: 14px;
+  background: var(--carte); color: var(--texte);
+  font: inherit; font-size: 16px; font-weight: 500;
+  outline: none; transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.formulaire input:not([type="checkbox"]):focus,
+.formulaire select.modele:focus {
+  border-color: var(--vert);
+  box-shadow: 0 0 0 4px rgba(31, 122, 92, 0.15);
+}
+
+.ligne { display: flex; gap: 12px; }
+.ligne label { flex: 1; }
+
+.case {
+  flex-direction: row !important; align-items: center; gap: 12px !important;
+  font-size: 16px !important; font-weight: 600 !important; color: var(--texte) !important;
+  background: var(--carte); border-radius: 18px; padding: 16px 18px; min-height: 56px;
+  box-shadow: var(--ombre);
+}
+.case input { width: 22px; height: 22px; accent-color: var(--vert); }
+
+.principal, .secondaire {
+  width: 100%; height: 56px; border-radius: 18px;
+  font-size: 16px; font-weight: 700; cursor: pointer;
+}
+
+.principal {
+  border: none; margin-top: 8px; color: #fff;
+  background: linear-gradient(135deg, var(--vert-clair), var(--vert));
+  box-shadow: 0 10px 22px rgba(31, 122, 92, 0.28);
+}
+
+.secondaire {
+  border: 1.5px solid var(--rouge); background: transparent; color: var(--rouge);
+}
+
+.erreur { margin: 2px 0 0; font-size: 13px; font-weight: 600; color: var(--rouge); }
+
+.champ-invalide {
+  border-color: var(--rouge) !important;
+  background: #FDF0EE !important;
+}
+
+.formulaire select.modele { cursor: pointer; }
+
+.aide-modele { margin: -6px 0 0; font-size: 13px; color: var(--texte-doux); line-height: 1.4; }
+
+/* ----- Simulation ----- */
+
+.simulation {
+  margin-top: 18px; background: var(--carte); border-radius: 22px;
+  padding: 20px; box-shadow: var(--ombre);
+}
+.simulation h2 { margin: 0 0 4px; font-size: 18px; font-weight: 800; }
+
+.sim-label {
+  display: block; margin-top: 16px;
+  font-size: 14px; font-weight: 600; color: var(--texte-doux);
+}
+.sim-label strong { color: var(--texte); }
+.sim-label input { display: block; width: 100%; margin-top: 10px; accent-color: var(--vert); }
+
+.sim-resultat {
+  margin-top: 14px; background: var(--vert-pale);
+  border-radius: 16px; padding: 4px 16px;
+}
+.sim-resultat div {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 0; border-bottom: 1px solid rgba(31, 122, 92, 0.12);
+}
+.sim-resultat div:last-child { border-bottom: none; }
+.sim-resultat span { color: var(--texte-doux); font-size: 14px; }
+.sim-resultat strong { color: var(--vert); font-size: 16px; font-weight: 800; }
+.sim-resultat strong.surcout { color: var(--rouge); }
+
+/* ----- Respect des préférences d'animation ----- */
+
+@media (prefers-reduced-motion: reduce) {
+  .titre-ligne .mascotte { animation: none; }
 }
