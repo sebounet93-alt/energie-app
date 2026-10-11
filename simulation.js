@@ -1,25 +1,27 @@
 ﻿(() => {
   const section = document.getElementById("resultat");
-  const zoneCout = document.getElementById("res-annuel");
+  let cleAffichee = null;
 
   function afficherSimulation() {
-    const a = chargerAppareils().find((x) => x.id === idCourant);
-    let bloc = document.getElementById("simulation");
+    const ancien = document.getElementById("simulation");
+    const a = section.hidden ? null : chargerAppareils().find((x) => x.id === idCourant);
 
     if (!a) {
-      if (bloc) bloc.remove();
+      if (ancien) ancien.remove();
+      cleAffichee = null;
       return;
     }
 
-    if (!bloc) {
-      bloc = document.createElement("div");
-      bloc.id = "simulation";
-      bloc.className = "simulation";
-      section.querySelector(".carte-resultat").after(bloc);
-    }
+    // Ne reconstruit le bloc que si l'appareil ou ses valeurs ont changé
+    const cle = a.id + JSON.stringify(a);
+    if (cle === cleAffichee && ancien) return;
+    cleAffichee = cle;
 
-    const actuel = coutAnnuel(a);
+    if (ancien) ancien.remove();
 
+    const bloc = document.createElement("div");
+    bloc.id = "simulation";
+    bloc.className = "simulation";
     bloc.innerHTML = `
       <h2>Simulation</h2>
       <p class="petit">Modifie la durée d'utilisation pour voir l'effet. Rien n'est enregistré.</p>
@@ -31,7 +33,10 @@
         <div><span>Économie par an</span><strong id="sim-eco"></strong></div>
       </div>`;
 
+    section.querySelector(".carte-resultat").after(bloc);
+
     const range = bloc.querySelector("#sim-range");
+    const actuel = coutAnnuel(a);
 
     const mettreAJour = () => {
       const h = Number(range.value);
@@ -49,8 +54,6 @@
     mettreAJour();
   }
 
-  // Se déclenche à chaque affichage d'un appareil
-  new MutationObserver(() => {
-    if (!section.hidden) afficherSimulation();
-  }).observe(zoneCout, { childList: true });
+  setInterval(afficherSimulation, 300);
+  afficherSimulation();
 })();
