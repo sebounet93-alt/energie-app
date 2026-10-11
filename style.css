@@ -143,3 +143,15 @@ body {
 .sim-resultat div:last-child { border-bottom: none; }
 .sim-resultat span { color: #5A6370; }
 .sim-resultat strong { color: #1F7A5C; }
+
+/* ----- Simulation ----- */
+
+.simulation { margin-top: 16px; background: #fff; border-radius: 16px; padding: 16px; }
+.simulation h2 { margin: 0 0 4px; font-size: 17px; }
+.sim-label { display: block; margin-top: 12px; font-size: 14px; color: #5A6370; }
+.sim-label input { display: block; width: 100%; margin-top: 8px; accent-color: #1F7A5C; }
+.sim-resultat { margin-top: 12px; }
+.sim-resultat div { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #E3E7EC; }
+.sim-resultat div:last-child { border-bottom: none; }
+.sim-resultat span { color: #5A6370; }
+.sim-resultat strong { color: #1F7A5C; }
