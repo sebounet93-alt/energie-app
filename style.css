@@ -169,3 +169,15 @@ body {
 .sim-resultat strong { color: #1F7A5C; }
 
 .sim-resultat strong.surcout { color: #C0392B; }
+
+/* ----- Rappel de sauvegarde ----- */
+
+.rappel {
+  margin-top: 16px; padding: 14px 16px; border-radius: 16px;
+  background: #FDF3E7; color: #7A4A12; font-size: 14px; line-height: 1.4;
+}
+.rappel p { margin: 0; }
+.rappel button {
+  margin-top: 10px; height: 40px; padding: 0 16px; border: none; border-radius: 12px;
+  background: #D97757; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer;
+}
