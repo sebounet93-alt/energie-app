@@ -269,3 +269,12 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .titre-ligne .mascotte { animation: none; }
 }
+
+/* ----- Boutons de l'écran résultat : dans le flux, sous les détails ----- */
+
+#resultat .actions {
+  position: static;
+  max-width: none;
+  margin-top: 24px;
+  padding-bottom: 12px;
+}
